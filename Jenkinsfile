@@ -27,6 +27,9 @@ pipeline {
                     echo "Test stage"
                     cd build
                     ls -la
+
+                    cd ..
+                    npm test
                 '''
             }
         }
