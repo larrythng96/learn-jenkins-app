@@ -4,27 +4,23 @@ pipeline {
     environment {
         NETLIFY_SITE_ID = '52a3e7b4-f54e-43bc-a78f-b7b31d83247e'
         NETLIFY_AUTH_TOKEN = credentials('netlify-token')
-        REACT_APP_VERSION = "1.0.$BUILD_ID"
+        REACT_APP_VERSION = "1.0.$BUILD_ID"                
+        AWS_S3_BUCKET = 'learn-jenkins-larrythng'
     }
 
     stages {
         stage('AWS') {
-            agent {
-                docker {
-                    image 'amazon/aws-cli'
-                    args "--entrypoint=''"
-                }
-            }
-            environment {
-                AWS_S3_BUCKET = 'learn-jenkins-larrythng'
-            }
             steps {
-                withCredentials([usernamePassword(credentialsId: 'my-aws', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
-                    sh '''
-                        aws --version
-                        echo "Hello S3!" > index.html
-                        aws s3 cp index.html s3://$AWS_S3_BUCKET/index.html
-                    '''
+                script {
+                    docker.image('amazon/aws-cli').inside('--entrypoint=""') {
+                        withCredentials([usernamePassword(credentialsId: 'my-aws', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
+                            sh '''
+                                aws --version
+                                echo "Hello S3!" > index.html
+                                aws s3 cp index.html s3://$AWS_S3_BUCKET/index.html
+                            '''
+                        }
+                    }
                 }
             }
         }
