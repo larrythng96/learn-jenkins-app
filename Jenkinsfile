@@ -29,9 +29,11 @@ pipeline {
 
         stage('AWS') {
             agent {
-                image 'amazon/aws-cli'
-                reuseNode true
-                args "--entrypoint=''"
+                docker {
+                    image 'amazon/aws-cli'
+                    reuseNode true
+                    args "--entrypoint=''"
+                }
             }
             environment{
                 AWS_S3_BUCKET = 'learn-jenkins-larrythng'
