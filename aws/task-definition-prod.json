@@ -3,6 +3,10 @@
         "FARGATE"
     ],
     "family": "learn-jenkins-ecs-task-definition-prod",
+    "runtimePlatform": {
+        "cpuArchitecture": "ARM64",
+        "operatingSystemFamily": "LINUX"
+    },
     "containerDefinitions": [
         {
             "name": "learn-jenkins-ecs-task-definition-prod-container-1",
