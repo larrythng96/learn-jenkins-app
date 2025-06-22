@@ -6,7 +6,7 @@
     "containerDefinitions": [
         {
             "name": "learn-jenkins-ecs-task-definition-prod-container-1",
-            "image": "883062483828.dkr.ecr.ap-southeast-1.amazonaws.com/learnjenkinsapp:1.0.80",
+            "image": "883062483828.dkr.ecr.ap-southeast-1.amazonaws.com/learnjenkinsapp:#APP_VERSION",
             "portMappings": [
                 {
                     "name": "nginx-80-tcp",
