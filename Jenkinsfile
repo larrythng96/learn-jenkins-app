@@ -10,6 +10,11 @@ pipeline {
     }
 
     stages {
+        stage('Build Docker Image'){
+            steps {
+                sh 'docker build -t my-jenkins-app .'
+            }
+        }
 
         stage('Deploy to AWS') {
             agent {
@@ -36,25 +41,6 @@ pipeline {
                         aws ecs wait services-stable --cluster $AWS_ECS_CLUSTER --services $AWS_ECS_SERVICE
                     '''
                 }
-            }
-        }
-
-        stage('Build') {
-            agent {
-                docker {
-                    image 'node:18-alpine'
-                    reuseNode true
-                }
-            }
-            steps {
-                sh '''
-                    ls -la
-                    node --version
-                    npm --version
-                    npm ci
-                    npm run build
-                    ls -la
-                '''
             }
         }
     }
