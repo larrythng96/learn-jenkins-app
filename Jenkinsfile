@@ -2,8 +2,11 @@ pipeline {
     agent any
 
     environment {
-        REACT_APP_VERSION = "1.0.$BUILD_ID"
-        AWS_DEFAULT_REGION = 'ap-southeast-1'
+        REACT_APP_VERSION="1.0.$BUILD_ID"
+        AWS_DEFAULT_REGION='ap-southeast-1'
+        AWS_ECS_CLUSTER="learn-jenkins-ecs-cluster-prod-attempt2"
+        AWS_ECS_SERVICE="learn-jenkins-ecs-service-prod"
+        AWS_ECS_TD="learn-jenkins-ecs-task-definition-prod"
     }
 
     stages {
@@ -29,9 +32,8 @@ pipeline {
                         aws --version
                         yum install jq -y
                         LATEST_TD_REVISION=$(aws ecs register-task-definition --cli-input-json file://aws/task-definition-prod.json | jq '.taskDefinition.revision')
-                        echo $LATEST_TD_REVISION
-                        aws ecs update-service --cluster learn-jenkins-ecs-cluster-prod-attempt2 --service learn-jenkins-ecs-service-prod --task-definition learn-jenkins-ecs-task-definition-prod:$LATEST_TD_REVISION
-                        aws ecs wait services-stable --cluster learn-jenkins-ecs-cluster-prod-attempt2 --services learn-jenkins-ecs-service-prod
+                        aws ecs update-service --cluster $AWS_ECS_CLUSTER --service $AWS_ECS_SERVICE --task-definition $AWS_ECS_TD:$LATEST_TD_REVISION
+                        aws ecs wait services-stable --cluster $AWS_ECS_CLUSTER --services $AWS_ECS_SERVICE
                     '''
                 }
             }
